@@ -1,4 +1,4 @@
-# zarke1-media-archive. 
+# zarke1-media-archive 
 
 Generative/algorithmic video work; experimental; abstract.  
 
@@ -8,15 +8,16 @@ Linking to the video uploads, which are described as "Experimental animation, ab
 
 # Tools used for producing video content.  
 
-[Python](https://www.python.org/). 
+[Python](https://www.python.org/) 
 
-[G'MIC](https://gmic.eu/#). 
+[G'MIC](https://gmic.eu/#) 
 
-[FFmpeg](https://ffmpeg.org/). 
+[FFmpeg](https://ffmpeg.org/) 
 
-[Krita](https://krita.org/en/). 
+[Krita](https://krita.org/en/) 
 
-[GIMP](https://www.gimp.org/). 
+[GIMP](https://www.gimp.org/) 
 
-
+&c..
+  
 Production scripts may be partial, reconstructed, renamed, or lost through years of iterative experimentation and migration between systems. There will be greater linkage of videos with actual processing steps and code going forward (late-May 2026).
