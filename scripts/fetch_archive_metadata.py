@@ -3,76 +3,95 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import internetarchive
+import internetarchive as ia
 
 
 OUTPUT_FILE = Path("data/archive_metadata.json")
-COLLECTION = "zarke1"
+
+SEARCH_QUERY = "uploader:1369sbo@gmail.com"
 
 
 def select_original_file(files: list[dict]) -> dict | None:
-    mp4s = [
-        f for f in files
-        if f.get("name", "").endswith(".mp4")
-        and not f.get("name", "").endswith(".ia.mp4")
-    ]
+    candidates = []
 
-    if not mp4s:
+    for f in files:
+        name = f.get("name", "")
+
+        if not name.endswith(".mp4"):
+            continue
+
+        if name.endswith(".ia.mp4"):
+            continue
+
+        candidates.append(f)
+
+    if not candidates:
         return None
 
-    return mp4s[0]
+    return candidates[0]
 
 
-def build_entry(item: dict) -> dict | None:
-    metadata = item.get("metadata", {})
-    files = item.get("files", [])
+def build_entry(identifier: str) -> dict | None:
+    item = ia.get_item(identifier)
+
+    metadata = item.metadata
+    files = item.files
 
     original = select_original_file(files)
 
     if not original:
+        print(f"Skipping {identifier} (no original mp4)")
         return None
 
+    width = original.get("width")
+    height = original.get("height")
+
+    resolution = None
+
+    if width and height:
+        resolution = f"{width}x{height}"
+
     return {
-        "identifier": item["identifier"],
-        "title": metadata.get("title", item["identifier"]),
-        "mediatype": metadata.get("mediatype"),
+        "identifier": identifier,
+        "title": metadata.get("title", identifier),
         "addeddate": metadata.get("addeddate"),
         "description": metadata.get("description", ""),
-        "archive_url": f"https://archive.org/details/{item['identifier']}",
+        "archive_url": (
+            f"https://archive.org/details/{identifier}"
+        ),
         "download_url": (
             f"https://archive.org/download/"
-            f"{item['identifier']}/{original['name']}"
+            f"{identifier}/{original['name']}"
         ),
-        "filename": original["name"],
-        "size": original.get("size"),
+        "filename": original.get("name"),
         "format": original.get("format"),
+        "size": original.get("size"),
         "duration": original.get("length"),
-        "width": original.get("width"),
-        "height": original.get("height"),
+        "width": width,
+        "height": height,
+        "resolution": resolution,
     }
 
 
 def main() -> None:
-    search = internetarchive.search_items(
-        f"collection:{COLLECTION}"
-    )
-
     results = []
 
-    for result in search:
+    search = ia.search_items(SEARCH_QUERY)
+
+    for i, result in enumerate(search):
         identifier = result["identifier"]
 
-        item = internetarchive.get_item(identifier)
+        print(f"[{i}] Fetching {identifier}")
 
-        entry = build_entry(item.item_metadata)
+        try:
+            entry = build_entry(identifier)
 
-        if entry:
-            results.append(entry)
+            if entry:
+                results.append(entry)
 
-            print(
-                f"Added: {entry['identifier']} "
-                f"({entry['width']}x{entry['height']})"
-            )
+        except Exception as exc:
+            print(f"ERROR: {identifier}")
+            print(exc)
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
