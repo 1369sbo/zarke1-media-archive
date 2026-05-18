@@ -8,7 +8,7 @@ import internetarchive as ia
 
 OUTPUT_FILE = Path("data/archive_metadata.json")
 
-SEARCH_QUERY = "uploader:1369sbo@gmail.com"
+SEARCH_QUERY = "uploader:@gmail.com"
 
 
 def select_original_file(files: list[dict]) -> dict | None:
