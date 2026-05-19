@@ -8,11 +8,12 @@ Linking to the video uploads, which are described as "Experimental animation, ab
 
 ## Video production tools 
 
-[Python](https://www.python.org/) 
-[G'MIC](https://gmic.eu/#) 
-[FFmpeg](https://ffmpeg.org/) 
-[Krita](https://krita.org/en/) 
-[GIMP](https://www.gimp.org/) 
+- [Python](https://www.python.org/) 
+- [G'MIC](https://gmic.eu/#) 
+- [FFmpeg](https://ffmpeg.org/) 
+- [Krita](https://krita.org/en/) 
+- [GIMP](https://www.gimp.org/)
+
 &c..
   
 Production scripts may be partial, reconstructed, renamed, or lost through years of iterative experimentation and migration between systems. There will be greater linkage of videos with actual processing steps and code going forward (late-May 2026).
